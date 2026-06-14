@@ -20,8 +20,6 @@
         .double-heart.pop{animation:heartBurst .8s ease forwards}
         @keyframes heartBurst{0%{transform:translate(-50%,-50%) scale(0);opacity:1}30%{transform:translate(-50%,-50%) scale(1.2);opacity:1}100%{transform:translate(-50%,-50%) scale(1.5);opacity:0}}
         
-        .sound-toggle{position:absolute;top:16px;right:12px;z-index:10;background:rgba(0,0,0,0.5);width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;cursor:pointer;pointer-events:auto}
-        
         .bottom-nav{position:fixed;bottom:0;width:100%;z-index:20;padding:10px 16px calc(20px + env(safe-area-inset-bottom));display:flex;justify-content:center;gap:35px;background:linear-gradient(0deg,rgba(0,0,0,0.95),transparent)}
         .bottom-nav span{color:#888;font-weight:600;font-size:13px;cursor:pointer;padding-top:8px;border-top:2px solid transparent;transition:.2s}
         .bottom-nav span.active{color:#fff;border-top-color:#fff}
@@ -92,19 +90,13 @@
         let videos=[],currentReelId=null,searchHistory=JSON.parse(localStorage.getItem('ikub_history')||'[]');
         let comments=JSON.parse(localStorage.getItem('ikub_comments')||'{}');
         let myUsername=localStorage.getItem('ikub_username')||'';
-        let lastTap=0,globalMuted=false;
+        let lastTap=0;
         
         function getUsername(){return myUsername||'Guest';}
         function saveUsername(){const name=document.getElementById('usernameInput').value.trim();if(!name||name.length<2)return;myUsername=name;localStorage.setItem('ikub_username',name);document.getElementById('usernameModal').classList.add('hidden');updateProfileUI();}
         function changeUsername(){document.getElementById('usernameInput').value=myUsername;document.getElementById('usernameModal').classList.remove('hidden');}
         function updateProfileUI(){const name=getUsername();document.getElementById('profileName').textContent=name;document.getElementById('profileAvatar').textContent=name[0].toUpperCase();}
         if(!myUsername){document.getElementById('usernameModal').classList.remove('hidden');}else{updateProfileUI();}
-        
-        function toggleGlobalSound(){
-            globalMuted=!globalMuted;
-            document.querySelectorAll('.reel video').forEach(v=>v.muted=globalMuted);
-            document.querySelectorAll('.sound-toggle').forEach(b=>b.textContent=globalMuted?'🔇':'🔊');
-        }
         
         function switchPage(page){
             document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
@@ -140,15 +132,22 @@
             const c=document.getElementById('container');if(!videos.length){c.innerHTML='<div style="height:100%;display:flex;align-items:center;justify-content:center;color:#888;text-align:center;"><div style="font-size:50px;">🎬</div><p>No videos</p></div>';return;}
             c.innerHTML=videos.map(r=>`
                 <div class="reel" data-id="${r.id}">
-                    <video src="${r.url}" loop playsinline muted preload="auto"></video>
-                    <div class="sound-toggle" onclick="event.stopPropagation();toggleGlobalSound()">🔇</div>
+                    <video src="${r.url}" loop playsinline preload="auto"></video>
                     <div class="info"><div class="username">@${getUsername().toLowerCase().replace(/\s+/g,'_')}</div><div class="caption">${r.title}</div><div class="music">🎵 ${r.category} · Original</div></div>
                     <div class="actions">
                         <div class="act" onclick="event.stopPropagation();toggleLike('${r.id}',this.firstElementChild)"><span>${liked(r.id)?'❤️':'🤍'}</span><small>${likes().length}</small></div>
                         <div class="act" onclick="event.stopPropagation();openComments('${r.id}')"><span>💬</span><small>${(comments[r.id]||[]).length}</small></div>
+                        <div class="act" onclick="event.stopPropagation();toggleReelSound(this)"><span>🔊</span><small>Sound</small></div>
                     </div>
                 </div>`).join('');
             observe();addReelListeners();
+        }
+        
+        function toggleReelSound(el){
+            const reel=el.closest('.reel');
+            const video=reel.querySelector('video');
+            video.muted=!video.muted;
+            el.querySelector('span').textContent=video.muted?'🔇':'🔊';
         }
         
         function observe(){
@@ -159,7 +158,7 @@
         function addReelListeners(){
             document.querySelectorAll('.reel').forEach(reel=>{
                 reel.addEventListener('click',function(e){
-                    if(e.target.closest('.act')||e.target.closest('.sound-toggle'))return;
+                    if(e.target.closest('.act'))return;
                     const v=this.querySelector('video');v.paused?v.play():v.pause();
                 });
                 reel.addEventListener('touchstart',function(e){
