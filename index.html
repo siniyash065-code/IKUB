@@ -12,20 +12,19 @@
         .container{height:100vh;overflow-y:scroll;scroll-snap-type:y mandatory;scroll-behavior:smooth}.container::-webkit-scrollbar{display:none}
         .reel{height:100vh;scroll-snap-align:start;position:relative;display:flex;align-items:center;justify-content:center;background:#000}
         .reel video{width:100%;height:100%;object-fit:cover}
-        .reel .pause-icon{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) scale(0);font-size:60px;z-index:6;pointer-events:none;transition:transform .2s ease;opacity:0}
-        .reel .pause-icon.show{transform:translate(-50%,-50%) scale(1);opacity:0.8}
-        .info{position:absolute;bottom:20px;left:12px;right:60px;z-index:5}
+        .info{position:absolute;bottom:80px;left:12px;right:60px;z-index:5}
         .username{font-weight:600;font-size:14px;margin-bottom:4px}.caption{font-size:13px;opacity:0.9;line-height:1.3}.music{font-size:11px;opacity:0.7;margin-top:6px}
-        .actions{position:absolute;right:8px;bottom:80px;display:flex;flex-direction:column;gap:18px;align-items:center;z-index:5}
+        .actions{position:absolute;right:8px;bottom:140px;display:flex;flex-direction:column;gap:18px;align-items:center;z-index:5}
         .act{display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer}.act span{font-size:24px;transition:transform .2s}.act span:active{transform:scale(1.3)}.act small{font-size:10px;font-weight:600}
-        .unmute-btn{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);z-index:5;background:rgba(0,0,0,0.6);color:#fff;border:none;padding:12px 20px;border-radius:25px;font-size:16px;cursor:pointer}
         .double-heart{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) scale(0);font-size:80px;z-index:10;pointer-events:none;animation:none}
         .double-heart.pop{animation:heartBurst .8s ease forwards}
         @keyframes heartBurst{0%{transform:translate(-50%,-50%) scale(0);opacity:1}30%{transform:translate(-50%,-50%) scale(1.2);opacity:1}100%{transform:translate(-50%,-50%) scale(1.5);opacity:0}}
-        .top-nav{position:fixed;top:0;width:100%;z-index:20;padding:50px 16px 10px;display:flex;justify-content:center;gap:25px;background:linear-gradient(180deg,rgba(0,0,0,0.8),transparent)}
-        .top-nav span{color:#888;font-weight:600;font-size:15px;cursor:pointer;padding-bottom:6px;border-bottom:2px solid transparent;transition:.2s}
-        .top-nav span.active{color:#fff;border-bottom-color:#fff}
-        .search-page,.category-page{padding:90px 16px 20px}
+        
+        .bottom-nav{position:fixed;bottom:0;width:100%;z-index:20;padding:12px 16px 25px;display:flex;justify-content:center;gap:30px;background:linear-gradient(0deg,rgba(0,0,0,0.95),transparent)}
+        .bottom-nav span{color:#888;font-weight:600;font-size:14px;cursor:pointer;padding-top:6px;border-top:2px solid transparent;transition:.2s}
+        .bottom-nav span.active{color:#fff;border-top-color:#fff}
+        
+        .search-page,.category-page{padding:60px 16px 20px}
         .search-box{display:flex;align-items:center;gap:8px;background:#1a1a1a;border-radius:12px;padding:10px 14px;margin-bottom:20px}
         .search-box input{flex:1;background:none;border:none;color:#fff;font-size:15px;outline:none}.search-box input::placeholder{color:#666}.search-box .clear{color:#888;cursor:pointer;font-size:18px}
         .section-title{font-size:14px;font-weight:600;color:#888;margin-bottom:12px;display:flex;justify-content:space-between}.section-title span{color:#ff2d78;font-size:12px;cursor:pointer}
@@ -50,9 +49,6 @@
         .username-box button{background:#fff;color:#000;border:none;padding:12px 24px;border-radius:10px;font-weight:700;font-size:15px;cursor:pointer;width:100%}
         .profile-bar{position:fixed;top:50px;right:16px;z-index:20;display:flex;align-items:center;gap:8px;background:rgba(0,0,0,0.5);padding:6px 12px;border-radius:20px;font-size:13px;cursor:pointer}
         .profile-avatar{width:28px;height:28px;border-radius:50%;background:#444;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px}
-        .toast{position:fixed;bottom:100px;left:50%;transform:translateX(-50%);background:rgba(255,255,255,0.9);color:#000;padding:10px 24px;border-radius:25px;font-weight:600;font-size:14px;z-index:50;animation:slideUp .3s ease,slideDown .3s ease 1.5s forwards}
-        @keyframes slideUp{from{opacity:0;transform:translateX(-50%) translateY(20px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
-        @keyframes slideDown{from{opacity:1;transform:translateX(-50%) translateY(0)}to{opacity:0;transform:translateX(-50%) translateY(20px)}}
     </style>
 </head>
 <body>
@@ -62,7 +58,7 @@
     </div>
     <div class="profile-bar" id="profileBar" onclick="changeUsername()"><div class="profile-avatar" id="profileAvatar">?</div><span id="profileName">Guest</span></div>
 
-    <div class="top-nav">
+    <div class="bottom-nav">
         <span class="active" onclick="switchPage('home')">🏠 Home</span>
         <span onclick="switchPage('search')">🔍 Search</span>
         <span onclick="switchPage('category')">📂 Categories</span>
@@ -104,9 +100,9 @@
         
         function switchPage(page){
             document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-            document.querySelectorAll('.top-nav span').forEach(s=>s.classList.remove('active'));
+            document.querySelectorAll('.bottom-nav span').forEach(s=>s.classList.remove('active'));
             const pages={home:0,search:1,category:2};
-            document.querySelectorAll('.top-nav span')[pages[page]].classList.add('active');
+            document.querySelectorAll('.bottom-nav span')[pages[page]].classList.add('active');
             document.getElementById(page+'Page').classList.add('active');
             if(page==='search')renderHistory();
         }
@@ -131,12 +127,43 @@
         function openComments(reelId){currentReelId=reelId;const cmts=comments[reelId]||[];document.getElementById('commentsList').innerHTML=cmts.length?cmts.map(c=>`<div class="comment"><div class="comment-avatar">${c.user[0]}</div><div><div class="comment-user">${c.user}</div><div class="comment-text">${c.text}</div></div></div>`).join(''):'<p style="color:#888;font-size:13px;">No comments</p>';document.getElementById('commentsPanel').classList.add('open');document.getElementById('overlay').classList.add('active');}
         function closeComments(){document.getElementById('commentsPanel').classList.remove('open');document.getElementById('overlay').classList.remove('active');currentReelId=null;}
         function addComment(){const input=document.getElementById('commentInput');const text=input.value.trim();if(!text||!currentReelId)return;if(!comments[currentReelId])comments[currentReelId]=[];comments[currentReelId].push({user:getUsername(),text,time:new Date().toISOString()});localStorage.setItem('ikub_comments',JSON.stringify(comments));input.value='';openComments(currentReelId);render();}
-        function unmuteVideo(video){video.muted=false;video.play().catch(()=>{});const btn=video.parentElement.querySelector('.unmute-btn');if(btn)btn.remove();}
+        
         function render(){
             const c=document.getElementById('container');if(!videos.length){c.innerHTML='<div style="height:100vh;display:flex;align-items:center;justify-content:center;color:#888;text-align:center;"><div style="font-size:50px;">🎬</div><p>No videos</p></div>';return;}
-            c.innerHTML=videos.map(r=>`<div class="reel" data-id="${r.id}"><video src="${r.url}" loop playsinline></video><button class="unmute-btn" onclick="event.stopPropagation();unmuteVideo(this.previousElementSibling)">🔇 Tap for sound</button><div class="info"><div class="username">@${getUsername().toLowerCase().replace(/\s+/g,'_')}</div><div class="caption">${r.title}</div><div class="music">🎵 ${r.category} · Original</div></div><div class="actions"><div class="act" onclick="event.stopPropagation();toggleLike('${r.id}',this.firstElementChild)"><span>${liked(r.id)?'❤️':'🤍'}</span><small>${likes().length}</small></div><div class="act" onclick="event.stopPropagation();openComments('${r.id}')"><span>💬</span><small>${(comments[r.id]||[]).length}</small></div></div></div>`).join('');observe();addReelListeners();}
-        function observe(){const o=new IntersectionObserver((e)=>{e.forEach(x=>{const v=x.target.querySelector('video');if(v)x.isIntersecting?v.play().catch(()=>{}):v.pause();});},{threshold:0.6});document.querySelectorAll('.reel').forEach(r=>o.observe(r));}
-        function addReelListeners(){document.querySelectorAll('.reel').forEach(reel=>{reel.addEventListener('click',function(e){if(e.target.closest('.act')||e.target.closest('.unmute-btn'))return;const video=this.querySelector('video');const icon=this.querySelector('.pause-icon')||(()=>{const i=document.createElement('div');i.className='pause-icon';this.appendChild(i);return i;})();if(video.paused){video.play();icon.classList.remove('show');}else{video.pause();icon.textContent='⏸️';icon.classList.add('show');setTimeout(()=>icon.classList.remove('show'),600);}});reel.addEventListener('touchstart',function(e){const now=Date.now();const diff=now-lastTap;if(diff<300&&diff>0){showDoubleHeart(this,this.dataset.id);e.preventDefault();}lastTap=now;});});}
+            c.innerHTML=videos.map(r=>`<div class="reel" data-id="${r.id}"><video src="${r.url}" loop playsinline autoplay></video><div class="info"><div class="username">@${getUsername().toLowerCase().replace(/\s+/g,'_')}</div><div class="caption">${r.title}</div><div class="music">🎵 ${r.category} · Original</div></div><div class="actions"><div class="act" onclick="event.stopPropagation();toggleLike('${r.id}',this.firstElementChild)"><span>${liked(r.id)?'❤️':'🤍'}</span><small>${likes().length}</small></div><div class="act" onclick="event.stopPropagation();openComments('${r.id}')"><span>💬</span><small>${(comments[r.id]||[]).length}</small></div></div></div>`).join('');observe();addReelListeners();}
+        
+        function observe(){
+            const o=new IntersectionObserver((e)=>{
+                e.forEach(x=>{
+                    const v=x.target.querySelector('video');
+                    if(v){
+                        if(x.isIntersecting){
+                            v.muted=false;
+                            v.play().catch(()=>v.muted=true);
+                        } else {
+                            v.pause();
+                        }
+                    }
+                });
+            },{threshold:0.6});
+            document.querySelectorAll('.reel').forEach(r=>o.observe(r));
+        }
+        
+        function addReelListeners(){
+            document.querySelectorAll('.reel').forEach(reel=>{
+                reel.addEventListener('click',function(e){
+                    if(e.target.closest('.act'))return;
+                    const video=this.querySelector('video');
+                    if(video.paused){video.play();}else{video.pause();}
+                });
+                reel.addEventListener('touchstart',function(e){
+                    const now=Date.now();const diff=now-lastTap;
+                    if(diff<300&&diff>0){showDoubleHeart(this,this.dataset.id);e.preventDefault();}
+                    lastTap=now;
+                });
+            });
+        }
+        
         async function fetchVideos(){try{const r=await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/getUpdates`);const d=await r.json();if(!d.ok)return;const arr=[];for(const u of d.result){const m=u.channel_post;if(m&&m.video){const p=(m.caption||'').split('|');arr.push({id:m.video.file_id,title:p.length>=2?p[1].trim():(m.caption||'Video'),category:p.length>=2?p[0].trim():'Other'});}}for(let v of arr){try{const fr=await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/getFile?file_id=${v.id}`);const fd=await fr.json();if(fd.ok)v.url=`https://api.telegram.org/file/bot${BOT_TOKEN}/${fd.result.file_path}`;}catch(e){}}videos=arr;render();}catch(e){}}
         fetchVideos();setInterval(fetchVideos,60000);
     </script>
